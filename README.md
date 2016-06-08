@@ -8,76 +8,72 @@
     * [Setup requirements](#setup-requirements)
     * [Beginning with cloudwatch](#beginning-with-cloudwatch)
 1. [Usage - Configuration options and additional functionality](#usage)
-1. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
 1. [Limitations - OS compatibility, etc.](#limitations)
 1. [Development - Guide for contributing to the module](#development)
 
 ## Description
 
-Start with a one- or two-sentence summary of what the module does and/or what
-problem it solves. This is your 30-second elevator pitch for your module.
-Consider including OS/Puppet version it works with.
+Installs AWS Cloudwatch Monitoring Scripts and sets up a cron entry to 
+push monitoring information to Cloudwatch every minute.
 
-You can give more descriptive information in a second paragraph. This paragraph
-should answer the questions: "What does this module *do*?" and "Why would I use
-it?" If your module has a range of functionality (installation, configuration,
-management, etc.), this is the time to mention it.
+More info on the monitoring scripts can be found [here](http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/mon-scripts.html).
 
 ## Setup
 
-### What cloudwatch affects **OPTIONAL**
+### What cloudwatch affects
 
-If it's obvious what your module touches, you can skip this section. For
-example, folks can probably figure out that your mysql_instance module affects
-their MySQL instances.
+Creates a crontab entry in order to routinely push metrics to Cloudwatch.
+This cron job defaults to being run as the user running Puppet or root. 
 
-If there's more that they should know about, though, this is the place to mention:
+The Cloudwatch montitoring scripts that this module installs are
+dependent on the following packages and they will be installed automatically:
 
-* A list of files, packages, services, or operations that the module will alter,
-  impact, or execute.
-* Dependencies that your module automatically installs.
-* Warnings or other important notices.
+  * RHEL/CentOS/Fedora:
+    * `perl-Switch`
+    * `perl-DateTime`
+    * `perl-Sys-Syslog`
+    * `perl-LWP-Protocol-https`
+    * `perl-Digest-SHA`
+    * `unzip`
+      
+  * Amazon Linux:
+    * `perl-Switch`
+    * `perl-DateTime`
+    * `perl-Sys-Syslog`
+    * `perl-LWP-Protocol-https`
+    * `unzip`
+      
+  * Debian/Ubuntu:
+    * `libwww-perl`
+    * `libdatetime-perl`
+    * `unzip`
 
-### Setup Requirements **OPTIONAL**
+### Setup Requirements
 
-If your module requires anything extra before setting up (pluginsync enabled,
-etc.), mention it here.
-
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you might want to include an additional "Upgrading" section
-here.
+Once this module has been installed and your manifest has been applied to your
+Puppet nodes, Cloudwatch metrics will be pushed every minute. You *must* setup
+AWS IAM credentials on your instances or assign an IAM role to your instances
+that has access to push data to Cloudwatch. More info on this can be found
+[here](http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/mon-scripts.html#mon-scripts-getstarted).  
 
 ### Beginning with cloudwatch
 
-The very basic steps needed for a user to get the module up and running. This
-can include setup steps, if necessary, or it can be an example of the most
-basic use of the module.
-
 ## Usage
 
-This section is where you describe how to customize, configure, and do the
-fancy stuff with your module here. It's especially helpful if you include usage
-examples and code samples for doing things with your module.
-
-## Reference
-
-Here, include a complete list of your module's classes, types, providers,
-facts, along with the parameters for each. Users refer to this section (thus
-the name "Reference") to find specific details; most users don't read it per
-se.
+  * Install the module: `sudo puppet module install masterroot24-cloudwatch`
+  * Include the module in your manifests: `node 'my-node.example.com' { include cloudwatch }`
 
 ## Limitations
 
-This is where you list OS compatibility, version compatibility, etc. If there
-are Known Issues, you might want to include them under their own heading here.
+Tested on CentOS 7, Debian 7, Debian 8, Ubuntu 12.04, Ubuntu 14.04 and Amazon Linux 2015.03.
+Tested with Puppet 4.x and 3.x.
 
 ## Development
 
-Since your module is awesome, other users will want to play with it. Let them
-know what the ground rules for contributing are.
+Please feel free to file an issue on the GitHub repo or create a PR if
+there's something here that you'd like to fix. I'll try to fix issues
+as and when they arise as soon as I can.
 
-## Release Notes/Contributors/Etc. **Optional**
+## Release Notes/Contributors/Etc.
 
-If you aren't using changelog, put your release notes here (though you should
-consider using changelog). You can also add any additional sections you feel
-are necessary or important to include here. Please use the `## ` header.
+See the [CHANGELOG](CHANGELOG.md).
