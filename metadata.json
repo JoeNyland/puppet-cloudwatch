@@ -1,5 +1,5 @@
 {
-  "name": "masterroot24-cloudwatch",
+  "name": "MasterRoot24-cloudwatch",
   "version": "0.1.0",
   "author": "Joe Nyland",
   "summary": "Installs AWS Cloudwatch advanced metrics",
