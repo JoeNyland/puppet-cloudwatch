@@ -20,7 +20,7 @@
 class cloudwatch {
 
   # Establish which packages are needed, depending on the OS family
-  case $operatingsystem {
+  case $::operatingsystem {
     /(RedHat|CentOS|Fedora)$/: { $packages = [
       'perl-Switch', 'perl-DateTime', 'perl-Sys-Syslog',
       'perl-LWP-Protocol-https', 'perl-Digest-SHA', 'unzip'] }
@@ -28,6 +28,9 @@ class cloudwatch {
       'perl-Sys-Syslog', 'perl-LWP-Protocol-https', 'unzip'] }
     /(Ubuntu|Debian)$/: { $packages = ['unzip', 'libwww-perl',
       'libdatetime-perl'] }
+    default: {
+      fail("Module cloudwatch is not supported on ${::operatingsystem}")
+    }
   }
 
   # Install dependencies
