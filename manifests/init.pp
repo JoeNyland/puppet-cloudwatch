@@ -165,9 +165,7 @@ class cloudwatch (
   }
 
   # Install dependencies
-  package { $packages :
-    ensure => present
-  }
+  ensure_packages ($packages)
 
   # Download and extract the scripts from AWS
   archive { "/opt/${zip_name}":
