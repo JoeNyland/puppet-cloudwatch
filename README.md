@@ -161,6 +161,11 @@ Default: false
 The script reports only Auto Scaling metrics.  
 Default:false
 
+#### `cron_min`
+The minute at which to run the cron job.
+The default is cron runs every minute.  To change to run every 5 minutes use '*/5'.  
+Default: '*'
+
 ## Limitations
 
 Tested on CentOS 7, Debian 7, Debian 8, Ubuntu 12.04, Ubuntu 14.04 and Amazon Linux 2015.03.
