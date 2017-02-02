@@ -56,13 +56,13 @@
 #     following parameters:
 #
 #   --disk-path=/ --disk-path=/home
-#   Defulat: '/'
+#   Default: '/'
 #
 # [*disk_space_util*]
 #   Collects and sends the DiskSpaceUtilization metric for the selected disks.
 #   The metric is reported in percentages.
 #   Note, ignored if disk_path is undef.
-#   Defulat: true
+#   Default: true
 #
 #
 # [*disk_space_used*]
