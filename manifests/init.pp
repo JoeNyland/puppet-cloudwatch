@@ -19,6 +19,7 @@
 #
 class cloudwatch {
 
+
   # Establish which packages are needed, depending on the OS family
   case $::operatingsystem {
     /(RedHat|CentOS|Fedora)$/: { $packages = [
@@ -39,13 +40,12 @@ class cloudwatch {
   }
 
   # Download and extract the scripts from AWS
-  archive { 'CloudWatchMonitoringScripts-1.2.1':
-    ensure        => present,
-    url           => 'http://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-1.2.1.zip',
-    extension     => 'zip',
-    target        => '/opt',
-    digest_string => '939508e2fed7620625ba43fbd2668c6b',
-    src_target    => '/tmp'
+  archive { '/opt/CloudWatchMonitoringScripts-1.2.1.zip':
+    ensure       => present,
+    extract      => true,
+    extract_path => '/opt/',
+    source       => 'http://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-1.2.1.zip',
+    creates      => '/opt/aws-scripts-mon',
   }
 
   # Setup a cron to push the metrics to Cloudwatch every minute
