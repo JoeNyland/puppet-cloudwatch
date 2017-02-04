@@ -105,6 +105,12 @@
 #   The script reports only Auto Scaling metrics.
 #   Default:false
 #
+# [*cron_min*]
+#   The minute at which to run the cron job.
+#   The default is cron runs every minute.  To change to run every 5 minutes
+#   use '*/5'
+#   Default: '*'
+#
 # == Variables
 #
 # [*dest_dir*]
@@ -127,23 +133,24 @@
 # Copyright 2016 Joe Nyland, unless otherwise noted.
 #
 class cloudwatch (
-  $access_key       = undef,
-  $secret_key       = undef,
-  $enable_mem_util  = true,
-  $enable_mem_used  = true,
-  $enable_mem_avail = true,
-  $enable_swap_util = true,
-  $enable_swap_used = true,
-  $disk_path        = '/',
-  $disk_space_util  = true,
-  $disk_space_used  = true,
-  $disk_space_avail = true,
-  $memory_units     = 'megabytes',
-  $disk_space_units = 'gigabytes',
-  $aggregated       = false,
-  $aggregated_only  = false,
-  $auto_scaling     = false,
+  $access_key        = undef,
+  $secret_key        = undef,
+  $enable_mem_util   = true,
+  $enable_mem_used   = true,
+  $enable_mem_avail  = true,
+  $enable_swap_util  = true,
+  $enable_swap_used  = true,
+  $disk_path         = '/',
+  $disk_space_util   = true,
+  $disk_space_used   = true,
+  $disk_space_avail  = true,
+  $memory_units      = 'megabytes',
+  $disk_space_units  = 'gigabytes',
+  $aggregated        = false,
+  $aggregated_only   = false,
+  $auto_scaling      = false,
   $auto_scaling_only = false,
+  $cron_min          = '*',
 ){
 
   $dest_dir  = '/opt/aws-scripts-mon'
@@ -279,7 +286,7 @@ ${zip_name}",
   cron { 'cloudwatch':
     ensure   => present,
     name     => 'Push extra metrics to Cloudwatch',
-    minute   => '*',
+    minute   => $cron_min,
     hour     => '*',
     monthday => '*',
     month    => '*',
