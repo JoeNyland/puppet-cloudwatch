@@ -4,9 +4,9 @@
   "author": "Joe Nyland",
   "summary": "Installs AWS Cloudwatch advanced metrics",
   "license": "MIT",
-  "source": "https://github.com/MasterRoot24/puppet-cloudwatch",
-  "project_page": "https://github.com/MasterRoot24/puppet-cloudwatch",
-  "issues_url": "https://github.com/MasterRoot24/puppet-cloudwatch/issues",
+  "source": "https://github.com/JoeNyland/puppet-cloudwatch",
+  "project_page": "https://github.com/JoeNyland/puppet-cloudwatch",
+  "issues_url": "https://github.com/JoeNyland/puppet-cloudwatch/issues",
   "operatingsystem_support": [
     {
       "operatingsystem":"RedHat",
