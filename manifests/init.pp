@@ -46,17 +46,18 @@
 #   Default: true
 #
 # [*disk_path*]
-#   Selects the disk on which to report.
+#   Selects the disks on which to report.
 #   Can specify a mount point or any file located on a mount point for the
 #   filesystem that needs to be reported. For selecting multiple disks,
-#   specify a --disk-path=PATH for each one of them.
+#   add additional elements to the array.
 #
 #   Example:
 #     To select a disk for the filesystems mounted on / and /home, use the
 #     following parameters:
-#
-#   --disk-path=/ --disk-path=/home
-#   Default: '/'
+#  
+#     ['/', '/home']
+
+#   Default: ['/']
 #
 # [*disk_space_util*]
 #   Collects and sends the DiskSpaceUtilization metric for the selected disks.
@@ -140,7 +141,7 @@ class cloudwatch (
   $enable_mem_avail  = true,
   $enable_swap_util  = true,
   $enable_swap_used  = true,
-  $disk_path         = '/',
+  $disk_path         = ['/'],
   $disk_space_util   = true,
   $disk_space_used   = true,
   $disk_space_avail  = true,
@@ -192,7 +193,9 @@ ${zip_name}",
       require => Archive["/opt/${zip_name}"],
       before  => Cron['cloudwatch'],
     }
+    $creds_path = "--aws-credential-file=${cred_file}"
   }
+  else { $creds_path = '' }
 
   # build command
   if $enable_mem_util {
@@ -227,8 +230,8 @@ ${zip_name}",
 
   $memory_units_val = "--memory-units=${memory_units}"
 
-  if $disk_path {
-    $disk_path_val = "--disk-path=${disk_path}"
+  unless empty($disk_path) {
+    $disk_path_val = rstrip(inline_template('<% @disk_path.each do |path| -%>--disk-path=<%=path%> <%end-%>'))
     if $disk_space_util {
       $disk_space_util_val  = '--disk-space-util'
     }else{
@@ -273,8 +276,6 @@ ${zip_name}",
   }else{
     $auto_scaling_val = ''
   }
-
-  $creds_path = "--aws-credential-file=${cred_file}"
 
   $pl_path = "${dest_dir}/mon-put-instance-data.pl"
   $command = "${pl_path} ${mem_util} ${mem_used} ${mem_avail} ${swap_util}\
