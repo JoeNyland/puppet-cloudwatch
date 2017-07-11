@@ -268,7 +268,7 @@ ${zip_name}",
     if $auto_scaling_only {
       $auto_scaling_val = '--auto-scaling=only'
     }else{
-      $auto_scaling_val = '--atuo-scaling'
+      $auto_scaling_val = '--auto-scaling'
     }
   }else{
     $auto_scaling_val = ''
