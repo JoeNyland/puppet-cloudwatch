@@ -193,7 +193,9 @@ ${zip_name}",
       require => Archive["/opt/${zip_name}"],
       before  => Cron['cloudwatch'],
     }
+    $creds_path = "--aws-credential-file=${cred_file}"
   }
+  else { $creds_path = '' }
 
   # build command
   if $enable_mem_util {
@@ -274,8 +276,6 @@ ${zip_name}",
   }else{
     $auto_scaling_val = ''
   }
-
-  $creds_path = "--aws-credential-file=${cred_file}"
 
   $pl_path = "${dest_dir}/mon-put-instance-data.pl"
   $command = "${pl_path} ${mem_util} ${mem_used} ${mem_avail} ${swap_util}\
