@@ -151,6 +151,7 @@ class cloudwatch (
   $auto_scaling      = false,
   $auto_scaling_only = false,
   $cron_min          = '*',
+  $iam_role          = false,
 ) {
 
   $dest_dir  = '/opt/aws-scripts-mon'
@@ -191,7 +192,11 @@ class cloudwatch (
       require => Archive["/opt/${zip_name}"],
       before  => Cron['cloudwatch'],
     }
-    $creds_path = "--aws-credential-file=${cred_file}"
+    if $iam_role {
+      $creds_path = ""
+    } else {
+      $creds_path = "--aws-credential-file=${cred_file}"
+    }
   }
   else { $creds_path = '' }
 
