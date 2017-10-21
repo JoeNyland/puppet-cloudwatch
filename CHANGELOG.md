@@ -1,3 +1,9 @@
+## Release [0.5.2](https://github.com/JoeNyland/puppet-cloudwatch/releases/tag/0.5.2)
+
+* Use cron instead of cronie on Debian/Ubuntu OSes
+* Relax version constraint for archive module (#25)
+* Update the AWS scripts version to 1.2.2 (#27)
+
 ## Release [0.5.1](https://github.com/JoeNyland/puppet-cloudwatch/releases/tag/0.5.1)
 
 * No changes in this release
