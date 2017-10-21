@@ -229,7 +229,7 @@ class cloudwatch (
 
   $memory_units_val = "--memory-units=${memory_units}"
 
-  unless empty($disk_path) {
+  if ! empty($disk_path) {
     $disk_path_val = rstrip(inline_template('<% @disk_path.each do |path| -%>--disk-path=<%=path%> <%end-%>'))
     if $disk_space_util {
       $disk_space_util_val = '--disk-space-util'
