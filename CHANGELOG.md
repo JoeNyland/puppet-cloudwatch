@@ -1,3 +1,7 @@
+## Release [0.3.0](https://github.com/JoeNyland/puppet-cloudwatch/releases/tag/0.3.1)
+
+* Replace unsupported `unless` when evaluating `$disk_path`
+
 ## Release [0.3.0](https://github.com/JoeNyland/puppet-cloudwatch/releases/tag/0.3.0)
 
 * Allow multiple disk paths to be reported to CloudWatch
