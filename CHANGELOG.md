@@ -1,3 +1,8 @@
+## Release [0.3.0](https://github.com/JoeNyland/puppet-cloudwatch/releases/tag/0.3.0)
+
+* Allow multiple disk paths to be reported to CloudWatch
+* Allow the use of IAM instance profiles by omitting AWS credentials
+
 ## Release [0.2.0](https://github.com/JoeNyland/puppet-cloudwatch/releases/tag/0.2.0)
 
 * Change my GitHub username.
