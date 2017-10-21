@@ -60,7 +60,7 @@ that has access to push data to Cloudwatch. More info on this can be found
 
 ## Usage
 
-  * Install the module: `sudo puppet module install masterroot24-cloudwatch`
+  * Install the module: `puppet module install MasterRoot24-cloudwatch`
   * Include the module in your manifests: `node 'my-node.example.com' { include cloudwatch }`
 
 ## Class cloudwatch
