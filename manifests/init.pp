@@ -276,10 +276,12 @@ class cloudwatch (
   }
 
   $pl_path = "${dest_dir}/mon-put-instance-data.pl"
-  $command = "${pl_path} ${mem_util} ${mem_used} ${mem_avail} ${swap_util}\
-              ${swap_used} ${memory_units_val} ${disk_path_val} ${disk_space_util_val}\
-              ${disk_space_used_val} ${disk_space_avail_val} ${disk_space_units_val}\
-              ${aggregated_val} ${auto_scaling_val} ${creds_path} --from-cron"
+  $cmd = "${pl_path} ${mem_util} ${mem_used} ${mem_avail} ${swap_util}\
+          ${swap_used} ${memory_units_val} ${disk_path_val}\
+          ${disk_space_util_val} ${disk_space_used_val}\
+          ${disk_space_avail_val} ${disk_space_units_val} ${aggregated_val}\
+          ${auto_scaling_val} ${creds_path} --from-cron"
+  $command = regsubst($cmd, ' +', ' ', 'G')
 
   # Setup a cron to push the metrics to Cloudwatch every minute
   cron { 'cloudwatch':
