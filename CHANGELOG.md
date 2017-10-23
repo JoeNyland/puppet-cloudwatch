@@ -1,4 +1,4 @@
-## Release [0.3.0](https://github.com/JoeNyland/puppet-cloudwatch/releases/tag/0.3.1)
+## Release [0.3.1](https://github.com/JoeNyland/puppet-cloudwatch/releases/tag/0.3.1)
 
 * Replace unsupported `unless` when evaluating `$disk_path`
 
