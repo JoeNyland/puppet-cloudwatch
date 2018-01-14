@@ -2,7 +2,7 @@
 # ===========================
 #
 # Installs AWS Cloudwatch Monitoring Scripts and sets up a cron entry to push
-# monitoring information to Cloudwatch every minute.
+# monitoring information to Cloudwatch.
 #
 # Read more about AWS Cloudwatch Monitoring Scripts:
 #   http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/mon-scripts.html
@@ -10,92 +10,63 @@
 # == Parameters
 #
 # [*access_key*]
-#   The amazon user's access id that has permissions to upload cloudwatch data.
-#   Does not create the credentials file if this is left undef.
+#   IAM access key ID for a user that has permission to push metrics to Cloudwatch.
 #   Default: undef
 #
 # [*secret_key*]
-#   The amazon user's secret key.
-#   Does not create the credentials file if this is left undef.
+#   IAM secret access key for a user that has permission to push metrics to Cloudwatch.
 #   Default: undef
 #
 # [*enable_mem_util*]
-#   Collects and sends the MemoryUtilization metrics in percentages.
-#   This option reports only memory allocated by applications and the operating
-#   system, and excludes memory in cache and buffers.
+#   Collects and sends the MemoryUtilization metric as a percentage.
 #   Default: true
 #
 # [*enable_mem_used*]
-#   Collects and sends the MemoryUsed metrics, reported in megabytes.
-#   This option reports only memory allocated by applications and the operating
-#   system, and excludes memory in cache and buffers.
+#   Collects and sends the MemoryUsed metric.
 #   Default: true
 #
 # [*enable_mem_avail*]
-#   Collects and sends the MemoryAvailable metrics, reported in megabytes.
-#   This option reports memory available for use by applications and the
-#   operating system.
+#   Collects and sends the MemoryAvailable metric.
 #   Default: true
 #
 # [*enable_swap_util*]
-#   Collects and sends SwapUtilization metrics, reported in percentages.
+#   Collects and sends SwapUtilization metric as a percentage.
 #   Default: true
 #
 # [*enable_swap_used*]
-#   Collects and sends SwapUsed metrics, reported in megabytes.
+#   Collects and sends SwapUsed metric.
 #   Default: true
 #
 # [*disk_path*]
 #   Selects the disks on which to report.
-#   Can specify a mount point or any file located on a mount point for the
-#   filesystem that needs to be reported. For selecting multiple disks,
-#   add additional elements to the array.
-#
-#   Example:
-#     To select a disk for the filesystems mounted on / and /home, use the
-#     following parameters:
-#  
-#     ['/', '/home']
-
 #   Default: ['/']
 #
 # [*disk_space_util*]
 #   Collects and sends the DiskSpaceUtilization metric for the selected disks.
-#   The metric is reported in percentages.
-#   Note, ignored if disk_path is undef.
 #   Default: true
-#
 #
 # [*disk_space_used*]
 #   Collects and sends the DiskSpaceUsed metric for the selected disks.
-#   The metric is reported by default in gigabytes.
-#   Note, ignored if disk_path is undef.
 #   Default: true
 #
 # [*disk_space_avail*]
 #   Collects and sends the DiskSpaceAvailable metric for the selected disks.
-#   The metric is reported in gigabytes.
-#   Note, ignored if disk_path is undef.
 #   Default: true
 #
 # [*memory_units*]
 #   Specifies units in which to report memory usage.
-#   UNITS may be one of the following: bytes, kilobytes, megabytes, gigabytes.
 #   Default: 'megabytes'
 #
 # [*disk_space_units*]
 #   Specifies units in which to report disk space usage.
-#   UNITS may be one of the following: bytes, kilobytes, megabytes, gigabytes.
 #   Default: 'gigabytes'
 #
 # [*aggregated*]
-#   Adds aggregated metrics for instance type, AMI ID, and overall for the
-#   region.
+#   Adds aggregated metrics for instance type, AMI ID, and overall for the region.
 #   Default: false
 #
 # [*aggregated_only*]
-#   The script only aggregates metrics for instance type, AMI ID, and overall
-#   for the region.
+#   The script only aggregates metrics for instance type, AMI ID, and overall for the region.
 #   Default: false
 #
 # [*auto_scaling*]
@@ -104,18 +75,17 @@
 #
 # [*auto_scaling_only*]
 #   The script reports only Auto Scaling metrics.
-#   Default:false
+#   Default: false
 #
 # [*cron_min*]
-#   The minute at which to run the cron job.
-#   The default is cron runs every minute.  To change to run every 5 minutes
-#   use '*/5'
+#   The minute at which to run the cron job, specified an cron format. e.g. '*/5' would push metrics to Cloudwatch
+#   every 5 minutes.
 #   Default: '*'
 #
 # == Variables
 #
 # [*dest_dir*]
-#  The directory to install the aws scripts.
+#  The directory to install the AWS scripts.
 #
 # [*cred_file*]
 #  The file that contains the IAM credentials
@@ -126,12 +96,12 @@
 # Authors
 # -------
 #
-# Joe Nyland <contact@joenyland.me>
+# Joe Nyland <joenyland@me.com>
 #
 # Copyright
 # ---------
 #
-# Copyright 2016 Joe Nyland, unless otherwise noted.
+# Copyright 2018 Joe Nyland, unless otherwise noted.
 #
 class cloudwatch (
   $access_key        = undef,
