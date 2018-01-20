@@ -41,15 +41,15 @@
 #   Selects the disks on which to report.
 #   Default: ['/']
 #
-# [*disk_space_util*]
+# [*enable_disk_space_util*]
 #   Collects and sends the DiskSpaceUtilization metric for the selected disks.
 #   Default: true
 #
-# [*disk_space_used*]
+# [*enable_disk_space_used*]
 #   Collects and sends the DiskSpaceUsed metric for the selected disks.
 #   Default: true
 #
-# [*disk_space_avail*]
+# [*enable_disk_space_avail*]
 #   Collects and sends the DiskSpaceAvailable metric for the selected disks.
 #   Default: true
 #
@@ -104,24 +104,24 @@
 # Copyright 2018 Joe Nyland, unless otherwise noted.
 #
 class cloudwatch (
-  $access_key        = undef,
-  $secret_key        = undef,
-  $enable_mem_util   = true,
-  $enable_mem_used   = true,
-  $enable_mem_avail  = true,
-  $enable_swap_util  = true,
-  $enable_swap_used  = true,
-  $disk_path         = ['/'],
-  $disk_space_util   = true,
-  $disk_space_used   = true,
-  $disk_space_avail  = true,
-  $memory_units      = 'megabytes',
-  $disk_space_units  = 'gigabytes',
-  $aggregated        = false,
-  $aggregated_only   = false,
-  $auto_scaling      = false,
-  $auto_scaling_only = false,
-  $cron_min          = '*',
+  $access_key              = undef,
+  $secret_key              = undef,
+  $enable_mem_util         = true,
+  $enable_mem_used         = true,
+  $enable_mem_avail        = true,
+  $enable_swap_util        = true,
+  $enable_swap_used        = true,
+  $disk_path               = ['/'],
+  $enable_disk_space_util  = true,
+  $enable_disk_space_used  = true,
+  $enable_disk_space_avail = true,
+  $memory_units            = 'megabytes',
+  $disk_space_units        = 'gigabytes',
+  $aggregated              = false,
+  $aggregated_only         = false,
+  $auto_scaling            = false,
+  $auto_scaling_only       = false,
+  $cron_min                = '*',
 ) {
 
   $dest_dir  = '/opt/aws-scripts-mon'
@@ -201,17 +201,17 @@ class cloudwatch (
 
   if ! empty($disk_path) {
     $disk_path_val = rstrip(inline_template('<% @disk_path.each do |path| -%>--disk-path=<%=path%> <%end-%>'))
-    if $disk_space_util {
+    if $enable_disk_space_util {
       $disk_space_util_val = '--disk-space-util'
     } else {
       $disk_space_util_val = ''
     }
-    if $disk_space_used {
+    if $enable_disk_space_used {
       $disk_space_used_val = '--disk-space-used'
     } else {
       $disk_space_used_val = ''
     }
-    if $disk_space_avail {
+    if $enable_disk_space_avail {
       $disk_space_avail_val = '--disk-space-avail'
     } else {
       $disk_space_avail_val = ''
