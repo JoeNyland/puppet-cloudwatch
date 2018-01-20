@@ -86,14 +86,6 @@
 #   The directory to install the AWS scripts into.
 #   Default: '/opt'
 #
-# == Variables
-#
-# [*cred_file*]
-#   The file that contains the IAM credentials
-#
-# [*zip_name*]
-#   The name of the zip that contains the cloudwatch scripts.
-#
 # Authors
 # -------
 #
