@@ -17,6 +17,10 @@
 #   IAM secret access key for a user that has permission to push metrics to Cloudwatch.
 #   Default: undef
 #
+# [*iam_role*]
+#   IAM role used to provide AWS credentials.
+#   Default: undef
+#
 # [*enable_mem_util*]
 #   Collects and sends the MemoryUtilization metric as a percentage.
 #   Default: true
@@ -99,6 +103,7 @@
 class cloudwatch (
   $access_key              = undef,
   $secret_key              = undef,
+  $iam_role                = undef,
   $enable_mem_util         = true,
   $enable_mem_used         = true,
   $enable_mem_avail        = true,
@@ -149,6 +154,10 @@ class cloudwatch (
     creates      => $install_dir,
   }
 
+  if $access_key and $secret_key and $iam_role {
+    fail('Use IAM credentials OR IAM role')
+  }
+
   if $access_key and $secret_key {
     file { $cred_file:
       ensure  => file,
@@ -156,8 +165,15 @@ class cloudwatch (
       before  => Cron['cloudwatch'],
     }
     $creds_path = "--aws-credential-file=${cred_file}"
+  } else {
+    $creds_path = ''
   }
-  else { $creds_path = '' }
+
+  if $iam_role {
+    $iam_role_val = "--aws-iam-role=${iam_role}"
+  } else {
+    $iam_role_val = ''
+  }
 
   # build command
   if $enable_mem_util {
@@ -232,7 +248,7 @@ class cloudwatch (
     $auto_scaling_val = ''
   }
 
-  $cmd = "${install_dir}/mon-put-instance-data.pl --from-cron ${memory_units_val} ${disk_space_units_val} ${creds_path}
+  $cmd = "${install_dir}/mon-put-instance-data.pl --from-cron ${memory_units_val} ${disk_space_units_val} ${creds_path} ${iam_role_val}
           ${mem_util} ${mem_used} ${mem_avail} ${swap_util} ${swap_used}
           ${disk_path_val} ${disk_space_util_val} ${disk_space_used_val} ${disk_space_avail_val}
           ${aggregated_val} ${auto_scaling_val}"

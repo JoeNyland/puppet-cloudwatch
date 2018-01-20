@@ -82,6 +82,12 @@ Note: Both `access_key` _and_ `secret_key` must be set to use IAM user credentia
 
 Default: `undef`
 
+#### `iam_role`
+
+IAM role used to provide AWS credentials.
+
+Default: `undef`
+
 #### `enable_mem_util`
 
 Collects and sends the `MemoryUtilization` metric as a percentage.
