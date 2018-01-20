@@ -204,6 +204,12 @@ every 5 minutes.
 
 Default: `'*'` (every minute)
 
+#### `install_target`
+
+The directory to install the AWS scripts into.
+
+Default: `/opt`
+
 ## Limitations
 
 * Tested on CentOS 7, Debian 7, Debian 8, Ubuntu 12.04, Ubuntu 14.04 and Amazon Linux 2015.03.

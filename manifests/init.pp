@@ -82,13 +82,14 @@
 #   every 5 minutes.
 #   Default: '*'
 #
+# [*install_target*]
+#   The directory to install the AWS scripts into.
+#   Default: '/opt'
+#
 # == Variables
 #
-# [*dest_dir*]
-#  The directory to install the AWS scripts.
-#
 # [*cred_file*]
-#  The file that contains the IAM credentials
+#   The file that contains the IAM credentials
 #
 # [*zip_name*]
 #   The name of the zip that contains the cloudwatch scripts.
@@ -122,11 +123,13 @@ class cloudwatch (
   $auto_scaling            = false,
   $auto_scaling_only       = false,
   $cron_min                = '*',
+  $install_target          = '/opt'
 ) {
 
-  $dest_dir  = '/opt/aws-scripts-mon'
-  $cred_file = "${dest_dir}/awscreds.conf"
-  $zip_name  = 'CloudWatchMonitoringScripts-1.2.1.zip'
+  $install_dir = "${install_target}/aws-scripts-mon"
+  $cred_file   = "${install_dir}/awscreds.conf"
+  $zip_name    = 'CloudWatchMonitoringScripts-1.2.1.zip'
+  $zip_url     = "http://aws-cloudwatch.s3.amazonaws.com/downloads/${zip_name}"
 
   # Establish which packages are needed, depending on the OS family
   case $::operatingsystem {
@@ -146,20 +149,18 @@ class cloudwatch (
   ensure_packages($packages)
 
   # Download and extract the scripts from AWS
-  archive { "/opt/${zip_name}":
-    ensure       => present,
+  archive { $zip_name:
+    path         => "/tmp/${zip_name}",
     extract      => true,
-    extract_path => '/opt/',
-    source       => "http://aws-cloudwatch.s3.amazonaws.com/downloads/${zip_name}",
-    creates      => $dest_dir,
-    require      => Package[$packages],
+    extract_path => $install_target,
+    source       => $zip_url,
+    creates      => $install_dir,
   }
 
   if $access_key and $secret_key {
     file { $cred_file:
       ensure  => file,
       content => template('cloudwatch/awscreds.conf.erb'),
-      require => Archive["/opt/${zip_name}"],
       before  => Cron['cloudwatch'],
     }
     $creds_path = "--aws-credential-file=${cred_file}"
@@ -245,7 +246,7 @@ class cloudwatch (
     $auto_scaling_val = ''
   }
 
-  $pl_path = "${dest_dir}/mon-put-instance-data.pl"
+  $pl_path = "${install_dir}/mon-put-instance-data.pl"
   $cmd = "${pl_path} ${mem_util} ${mem_used} ${mem_avail} ${swap_util}\
           ${swap_used} ${memory_units_val} ${disk_path_val}\
           ${disk_space_util_val} ${disk_space_used_val}\
@@ -255,14 +256,14 @@ class cloudwatch (
 
   # Setup a cron to push the metrics to Cloudwatch every minute
   cron { 'cloudwatch':
-    ensure   => present,
-    name     => 'Push extra metrics to Cloudwatch',
-    minute   => $cron_min,
-    hour     => '*',
-    monthday => '*',
-    month    => '*',
-    weekday  => '*',
-    command  => $command,
-    require  => Archive['/opt/CloudWatchMonitoringScripts-1.2.1.zip'],
+    ensure    => present,
+    name      => 'Push extra metrics to Cloudwatch',
+    minute    => $cron_min,
+    hour      => '*',
+    monthday  => '*',
+    month     => '*',
+    weekday   => '*',
+    command   => $command,
+    require   => Archive[$zip_name]
   }
 }
