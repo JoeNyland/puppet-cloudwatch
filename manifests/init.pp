@@ -142,10 +142,8 @@ class cloudwatch (
     }
   }
 
-  # Install dependencies
   ensure_packages($packages)
 
-  # Download and extract the scripts from AWS
   archive { $zip_name:
     path         => "/tmp/${zip_name}",
     extract      => true,
@@ -175,7 +173,6 @@ class cloudwatch (
     $iam_role_val = ''
   }
 
-  # build command
   if $enable_mem_util {
     $mem_util = '--mem-util'
   } else {
@@ -253,7 +250,6 @@ class cloudwatch (
           ${disk_path_val} ${disk_space_util_val} ${disk_space_used_val} ${disk_space_avail_val}
           ${aggregated_val} ${auto_scaling_val}"
 
-  # Setup a cron to push the metrics to Cloudwatch every minute
   cron { 'cloudwatch':
     ensure    => present,
     name      => 'Push extra metrics to Cloudwatch',
