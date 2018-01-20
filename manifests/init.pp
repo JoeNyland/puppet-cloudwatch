@@ -192,31 +192,25 @@ class cloudwatch (
 
   $memory_units_val = "--memory-units=${memory_units}"
 
-  if ! empty($disk_path) {
-    $disk_path_val = rstrip(inline_template('<% @disk_path.each do |path| -%>--disk-path=<%=path%> <%end-%>'))
-    if $enable_disk_space_util {
-      $disk_space_util_val = '--disk-space-util'
-    } else {
-      $disk_space_util_val = ''
-    }
-    if $enable_disk_space_used {
-      $disk_space_used_val = '--disk-space-used'
-    } else {
-      $disk_space_used_val = ''
-    }
-    if $enable_disk_space_avail {
-      $disk_space_avail_val = '--disk-space-avail'
-    } else {
-      $disk_space_avail_val = ''
-    }
-    $disk_space_units_val = "--disk-space-units=${disk_space_units}"
+  $disk_path_val = rstrip(inline_template('<% @disk_path.each do |path| -%>--disk-path=<%=path%> <%end-%>'))
+
+  if $enable_disk_space_util {
+    $disk_space_util_val = '--disk-space-util'
   } else {
-    $disk_path_val        = ''
-    $disk_space_util_val  = ''
-    $disk_space_used_val  = ''
-    $disk_space_avail_val = ''
-    $disk_space_units_val = ''
+    $disk_space_util_val = ''
   }
+  if $enable_disk_space_used {
+    $disk_space_used_val = '--disk-space-used'
+  } else {
+    $disk_space_used_val = ''
+  }
+  if $enable_disk_space_avail {
+    $disk_space_avail_val = '--disk-space-avail'
+  } else {
+    $disk_space_avail_val = ''
+  }
+
+  $disk_space_units_val = "--disk-space-units=${disk_space_units}"
 
   if $aggregated {
     if $aggregated_only {

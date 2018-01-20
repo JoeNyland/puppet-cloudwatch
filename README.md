@@ -137,23 +137,17 @@ Collects and sends the `DiskSpaceUtilization` metric for the selected disks.
 
 The metric is reported as a percentage.
 
-Note: Ignored if `disk_path` is `undef`.
-
 Default: `true`
 
 #### `enable_disk_space_used`
 
 Collects and sends the `DiskSpaceUsed` metric for the selected disks.
 
-Note: Ignored if `disk_path` is `undef`.
-
 Default: `true`
 
 #### `enable_disk_space_avail`
 
 Collects and sends the `DiskSpaceAvailable` metric for the selected disks.
-
-Note: Ignored if `disk_path` is `undef`.
 
 Default: `true`
 
