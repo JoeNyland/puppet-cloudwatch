@@ -90,6 +90,10 @@
 #   The directory to install the AWS scripts into.
 #   Default: '/opt'
 #
+# [*manage_dependencies*]
+#   Whether or not this module should manage the installation of the packages which the AWS scripts depend on.
+#   Default: true
+#
 # Authors
 # -------
 #
@@ -120,7 +124,8 @@ class cloudwatch (
   $auto_scaling            = false,
   $auto_scaling_only       = false,
   $cron_min                = '*',
-  $install_target          = '/opt'
+  $install_target          = '/opt',
+  $manage_dependencies     = true
 ) {
 
   $install_dir = "${install_target}/aws-scripts-mon"
@@ -128,21 +133,25 @@ class cloudwatch (
   $zip_name    = 'CloudWatchMonitoringScripts-1.2.1.zip'
   $zip_url     = "http://aws-cloudwatch.s3.amazonaws.com/downloads/${zip_name}"
 
-  # Establish which packages are needed, depending on the OS family
-  case $::operatingsystem {
-    /(RedHat|CentOS|Fedora)$/: { $packages = [
-      'perl-Switch', 'perl-DateTime', 'perl-Sys-Syslog',
-      'perl-LWP-Protocol-https', 'perl-Digest-SHA', 'unzip'] }
-    'Amazon': { $packages = ['perl-Switch', 'perl-DateTime',
-      'perl-Sys-Syslog', 'perl-LWP-Protocol-https', 'unzip'] }
-    /(Ubuntu|Debian)$/: { $packages = ['unzip', 'libwww-perl',
-      'libdatetime-perl'] }
-    default: {
-      fail("Module cloudwatch is not supported on ${::operatingsystem}")
+  if $manage_dependencies {
+    # Establish which packages are needed, depending on the OS family
+    case $::operatingsystem {
+      /(RedHat|CentOS|Fedora)$/: {
+        $packages = ['perl-Switch', 'perl-DateTime', 'perl-Sys-Syslog', 'perl-LWP-Protocol-https', 'perl-Digest-SHA', 'unzip']
+      }
+      'Amazon': {
+        $packages = ['perl-Switch', 'perl-DateTime', 'perl-Sys-Syslog', 'perl-LWP-Protocol-https', 'unzip']
+      }
+      /(Ubuntu|Debian)$/: {
+        $packages = ['unzip', 'libwww-perl', 'libdatetime-perl']
+      }
+      default: {
+        fail("Module cloudwatch is not supported on ${::operatingsystem}")
+      }
     }
-  }
 
-  ensure_packages($packages)
+    ensure_packages($packages)
+  }
 
   archive { $zip_name:
     path         => "/tmp/${zip_name}",
