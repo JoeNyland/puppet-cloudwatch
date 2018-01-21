@@ -170,7 +170,7 @@ class cloudwatch (
     if $iam_role { fail('$access_key and $secret_key cannot be used with $iam_role') }
     $credentials = "--aws-access-key-id=${access_key} --aws-secret-key=${secret_key}"
   } else {
-    $credentials = ""
+    $credentials = ''
   }
 
   if $credential_file {
@@ -268,14 +268,14 @@ class cloudwatch (
           ${aggregated_val} ${auto_scaling_val}"
 
   cron { 'cloudwatch':
-    ensure    => present,
-    name      => 'Push extra metrics to Cloudwatch',
-    minute    => $cron_min,
-    hour      => '*',
-    monthday  => '*',
-    month     => '*',
-    weekday   => '*',
-    command   => regsubst($cmd, '\s+', ' ', 'G'),
-    require   => Archive[$zip_name]
+    ensure   => present,
+    name     => 'Push extra metrics to Cloudwatch',
+    minute   => $cron_min,
+    hour     => '*',
+    monthday => '*',
+    month    => '*',
+    weekday  => '*',
+    command  => regsubst($cmd, '\s+', ' ', 'G'),
+    require  => Archive[$zip_name]
   }
 }
