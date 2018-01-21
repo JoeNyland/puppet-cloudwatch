@@ -25,7 +25,7 @@ Creates a crontab entry in order to routinely push metrics to Cloudwatch.
 This cron job defaults to being run as the user running Puppet or root.
 
 The Cloudwatch monitoring scripts that this module installs are dependent on the following packages and they will be
-installed automatically:
+installed automatically, unless `$manage_dependencies` is set to `false`.
 
   * RHEL/CentOS/Fedora:
     * `perl-Switch`
@@ -209,6 +209,12 @@ Default: `'*'` (every minute)
 The directory to install the AWS scripts into.
 
 Default: `/opt`
+
+#### `manage_dependencies`
+
+Whether or not this module should manage the installation of the packages which the AWS scripts depend on.
+
+Default: `true`
 
 ## Limitations
 
