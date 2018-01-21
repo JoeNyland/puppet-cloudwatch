@@ -17,6 +17,10 @@
 #   IAM secret access key for a user that has permission to push metrics to Cloudwatch.
 #   Default: undef
 #
+# [*credential_file*]
+#   Path to file containing IAM user credentials.
+#   Default: undef
+#
 # [*iam_role*]
 #   IAM role used to provide AWS credentials.
 #   Default: undef
@@ -107,6 +111,7 @@
 class cloudwatch (
   $access_key              = undef,
   $secret_key              = undef,
+  $credential_file         = undef,
   $iam_role                = undef,
   $enable_mem_util         = true,
   $enable_mem_used         = true,
@@ -129,7 +134,6 @@ class cloudwatch (
 ) {
 
   $install_dir = "${install_target}/aws-scripts-mon"
-  $cred_file   = "${install_dir}/awscreds.conf"
   $zip_name    = 'CloudWatchMonitoringScripts-1.2.1.zip'
   $zip_url     = "http://aws-cloudwatch.s3.amazonaws.com/downloads/${zip_name}"
 
@@ -161,22 +165,25 @@ class cloudwatch (
     creates      => $install_dir,
   }
 
-  if $access_key and $secret_key and $iam_role {
-    fail('Use IAM credentials OR IAM role')
+  if $access_key and $secret_key {
+    if $credential_file { fail('$access_key and $secret_key cannot be used with $credential_file') }
+    if $iam_role { fail('$access_key and $secret_key cannot be used with $iam_role') }
+    $credentials = "--aws-access-key-id=${access_key} --aws-secret-key=${secret_key}"
+  } else {
+    $credentials = ""
   }
 
-  if $access_key and $secret_key {
-    file { $cred_file:
-      ensure  => file,
-      content => template('cloudwatch/awscreds.conf.erb'),
-      before  => Cron['cloudwatch'],
-    }
-    $creds_path = "--aws-credential-file=${cred_file}"
+  if $credential_file {
+    if $access_key and $secret_key { fail('$credential_file cannot be used with $access_key and $secret_key') }
+    if $iam_role { fail('$credential_file cannot be used with $iam_role') }
+    $creds_path = "--aws-credential-file=${credential_file}"
   } else {
     $creds_path = ''
   }
 
   if $iam_role {
+    if $access_key and $secret_key { fail('$iam_role cannot be used with $access_key and $secret_key') }
+    if $credential_file { fail('$iam_role cannot be used with $credential_file') }
     $iam_role_val = "--aws-iam-role=${iam_role}"
   } else {
     $iam_role_val = ''
@@ -254,7 +261,8 @@ class cloudwatch (
     $auto_scaling_val = ''
   }
 
-  $cmd = "${install_dir}/mon-put-instance-data.pl --from-cron ${memory_units_val} ${disk_space_units_val} ${creds_path} ${iam_role_val}
+  $cmd = "${install_dir}/mon-put-instance-data.pl'
+          --from-cron ${memory_units_val} ${disk_space_units_val} ${creds_path} ${credentials} ${iam_role_val}
           ${mem_util} ${mem_used} ${mem_avail} ${swap_util} ${swap_used}
           ${disk_path_val} ${disk_space_util_val} ${disk_space_used_val} ${disk_space_avail_val}
           ${aggregated_val} ${auto_scaling_val}"
