@@ -1,6 +1,6 @@
 {
   "name": "MasterRoot24-cloudwatch",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "author": "Joe Nyland",
   "summary": "Installs AWS Cloudwatch advanced metrics",
   "license": "MIT",
@@ -31,8 +31,8 @@
   ],
   "tags": [ "monitoring", "aws", "cloudwatch" ],
   "dependencies": [
-    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"},
-    {"name":"puppet-archive","version_requirement":"1.2.x"}
+    {"name":"puppetlabs/stdlib","version_requirement":">= 1.0.0"},
+    {"name":"puppet/archive","version_requirement":"1.2.x"}
   ],
   "data_provider": null
 }

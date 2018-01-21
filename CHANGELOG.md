@@ -1,4 +1,14 @@
-## Release [0.3.0](https://github.com/JoeNyland/puppet-cloudwatch/releases/tag/0.3.1)
+## Release [0.4.0](https://github.com/JoeNyland/puppet-cloudwatch/releases/tag/0.4.0)
+
+* Remove extra spaces from command that's added to crontab
+* Improve documentation
+* Rename disk space related parameters
+* Add ability to customise installation location
+* Add support for using a specific IAM role
+* Add the ability to disable the installation of system packages in the module
+* Add the ability to provide a credentials file
+
+## Release [0.3.1](https://github.com/JoeNyland/puppet-cloudwatch/releases/tag/0.3.1)
 
 * Replace unsupported `unless` when evaluating `$disk_path`
 

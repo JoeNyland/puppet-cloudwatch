@@ -2,7 +2,7 @@
 # ===========================
 #
 # Installs AWS Cloudwatch Monitoring Scripts and sets up a cron entry to push
-# monitoring information to Cloudwatch every minute.
+# monitoring information to Cloudwatch.
 #
 # Read more about AWS Cloudwatch Monitoring Scripts:
 #   http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/mon-scripts.html
@@ -10,92 +10,71 @@
 # == Parameters
 #
 # [*access_key*]
-#   The amazon user's access id that has permissions to upload cloudwatch data.
-#   Does not create the credentials file if this is left undef.
+#   IAM access key ID for a user that has permission to push metrics to Cloudwatch.
 #   Default: undef
 #
 # [*secret_key*]
-#   The amazon user's secret key.
-#   Does not create the credentials file if this is left undef.
+#   IAM secret access key for a user that has permission to push metrics to Cloudwatch.
+#   Default: undef
+#
+# [*credential_file*]
+#   Path to file containing IAM user credentials.
+#   Default: undef
+#
+# [*iam_role*]
+#   IAM role used to provide AWS credentials.
 #   Default: undef
 #
 # [*enable_mem_util*]
-#   Collects and sends the MemoryUtilization metrics in percentages.
-#   This option reports only memory allocated by applications and the operating
-#   system, and excludes memory in cache and buffers.
+#   Collects and sends the MemoryUtilization metric as a percentage.
 #   Default: true
 #
 # [*enable_mem_used*]
-#   Collects and sends the MemoryUsed metrics, reported in megabytes.
-#   This option reports only memory allocated by applications and the operating
-#   system, and excludes memory in cache and buffers.
+#   Collects and sends the MemoryUsed metric.
 #   Default: true
 #
 # [*enable_mem_avail*]
-#   Collects and sends the MemoryAvailable metrics, reported in megabytes.
-#   This option reports memory available for use by applications and the
-#   operating system.
+#   Collects and sends the MemoryAvailable metric.
 #   Default: true
 #
 # [*enable_swap_util*]
-#   Collects and sends SwapUtilization metrics, reported in percentages.
+#   Collects and sends SwapUtilization metric as a percentage.
 #   Default: true
 #
 # [*enable_swap_used*]
-#   Collects and sends SwapUsed metrics, reported in megabytes.
+#   Collects and sends SwapUsed metric.
 #   Default: true
 #
 # [*disk_path*]
 #   Selects the disks on which to report.
-#   Can specify a mount point or any file located on a mount point for the
-#   filesystem that needs to be reported. For selecting multiple disks,
-#   add additional elements to the array.
-#
-#   Example:
-#     To select a disk for the filesystems mounted on / and /home, use the
-#     following parameters:
-#  
-#     ['/', '/home']
-
 #   Default: ['/']
 #
-# [*disk_space_util*]
+# [*enable_disk_space_util*]
 #   Collects and sends the DiskSpaceUtilization metric for the selected disks.
-#   The metric is reported in percentages.
-#   Note, ignored if disk_path is undef.
 #   Default: true
 #
-#
-# [*disk_space_used*]
+# [*enable_disk_space_used*]
 #   Collects and sends the DiskSpaceUsed metric for the selected disks.
-#   The metric is reported by default in gigabytes.
-#   Note, ignored if disk_path is undef.
 #   Default: true
 #
-# [*disk_space_avail*]
+# [*enable_disk_space_avail*]
 #   Collects and sends the DiskSpaceAvailable metric for the selected disks.
-#   The metric is reported in gigabytes.
-#   Note, ignored if disk_path is undef.
 #   Default: true
 #
 # [*memory_units*]
 #   Specifies units in which to report memory usage.
-#   UNITS may be one of the following: bytes, kilobytes, megabytes, gigabytes.
 #   Default: 'megabytes'
 #
 # [*disk_space_units*]
 #   Specifies units in which to report disk space usage.
-#   UNITS may be one of the following: bytes, kilobytes, megabytes, gigabytes.
 #   Default: 'gigabytes'
 #
 # [*aggregated*]
-#   Adds aggregated metrics for instance type, AMI ID, and overall for the
-#   region.
+#   Adds aggregated metrics for instance type, AMI ID, and overall for the region.
 #   Default: false
 #
 # [*aggregated_only*]
-#   The script only aggregates metrics for instance type, AMI ID, and overall
-#   for the region.
+#   The script only aggregates metrics for instance type, AMI ID, and overall for the region.
 #   Default: false
 #
 # [*auto_scaling*]
@@ -104,99 +83,112 @@
 #
 # [*auto_scaling_only*]
 #   The script reports only Auto Scaling metrics.
-#   Default:false
+#   Default: false
 #
 # [*cron_min*]
-#   The minute at which to run the cron job.
-#   The default is cron runs every minute.  To change to run every 5 minutes
-#   use '*/5'
+#   The minute at which to run the cron job, specified an cron format. e.g. '*/5' would push metrics to Cloudwatch
+#   every 5 minutes.
 #   Default: '*'
 #
-# == Variables
+# [*install_target*]
+#   The directory to install the AWS scripts into.
+#   Default: '/opt'
 #
-# [*dest_dir*]
-#  The directory to install the aws scripts.
-#
-# [*cred_file*]
-#  The file that contains the IAM credentials
-#
-# [*zip_name*]
-#   The name of the zip that contains the cloudwatch scripts.
+# [*manage_dependencies*]
+#   Whether or not this module should manage the installation of the packages which the AWS scripts depend on.
+#   Default: true
 #
 # Authors
 # -------
 #
-# Joe Nyland <contact@joenyland.me>
+# Joe Nyland <joenyland@me.com>
 #
 # Copyright
 # ---------
 #
-# Copyright 2016 Joe Nyland, unless otherwise noted.
+# Copyright 2018 Joe Nyland, unless otherwise noted.
 #
 class cloudwatch (
-  $access_key        = undef,
-  $secret_key        = undef,
-  $enable_mem_util   = true,
-  $enable_mem_used   = true,
-  $enable_mem_avail  = true,
-  $enable_swap_util  = true,
-  $enable_swap_used  = true,
-  $disk_path         = ['/'],
-  $disk_space_util   = true,
-  $disk_space_used   = true,
-  $disk_space_avail  = true,
-  $memory_units      = 'megabytes',
-  $disk_space_units  = 'gigabytes',
-  $aggregated        = false,
-  $aggregated_only   = false,
-  $auto_scaling      = false,
-  $auto_scaling_only = false,
-  $cron_min          = '*',
+  $access_key              = undef,
+  $secret_key              = undef,
+  $credential_file         = undef,
+  $iam_role                = undef,
+  $enable_mem_util         = true,
+  $enable_mem_used         = true,
+  $enable_mem_avail        = true,
+  $enable_swap_util        = true,
+  $enable_swap_used        = true,
+  $disk_path               = ['/'],
+  $enable_disk_space_util  = true,
+  $enable_disk_space_used  = true,
+  $enable_disk_space_avail = true,
+  $memory_units            = 'megabytes',
+  $disk_space_units        = 'gigabytes',
+  $aggregated              = false,
+  $aggregated_only         = false,
+  $auto_scaling            = false,
+  $auto_scaling_only       = false,
+  $cron_min                = '*',
+  $install_target          = '/opt',
+  $manage_dependencies     = true
 ) {
 
-  $dest_dir  = '/opt/aws-scripts-mon'
-  $cred_file = "${dest_dir}/awscreds.conf"
-  $zip_name  = 'CloudWatchMonitoringScripts-1.2.1.zip'
+  $install_dir = "${install_target}/aws-scripts-mon"
+  $zip_name    = 'CloudWatchMonitoringScripts-1.2.1.zip'
+  $zip_url     = "http://aws-cloudwatch.s3.amazonaws.com/downloads/${zip_name}"
 
-  # Establish which packages are needed, depending on the OS family
-  case $::operatingsystem {
-    /(RedHat|CentOS|Fedora)$/: { $packages = [
-      'perl-Switch', 'perl-DateTime', 'perl-Sys-Syslog',
-      'perl-LWP-Protocol-https', 'perl-Digest-SHA', 'unzip'] }
-    'Amazon': { $packages = ['perl-Switch', 'perl-DateTime',
-      'perl-Sys-Syslog', 'perl-LWP-Protocol-https', 'unzip'] }
-    /(Ubuntu|Debian)$/: { $packages = ['unzip', 'libwww-perl',
-      'libdatetime-perl'] }
-    default: {
-      fail("Module cloudwatch is not supported on ${::operatingsystem}")
+  if $manage_dependencies {
+    # Establish which packages are needed, depending on the OS family
+    case $::operatingsystem {
+      /(RedHat|CentOS|Fedora)$/: {
+        $packages = ['perl-Switch', 'perl-DateTime', 'perl-Sys-Syslog', 'perl-LWP-Protocol-https', 'perl-Digest-SHA', 'unzip']
+      }
+      'Amazon': {
+        $packages = ['perl-Switch', 'perl-DateTime', 'perl-Sys-Syslog', 'perl-LWP-Protocol-https', 'unzip']
+      }
+      /(Ubuntu|Debian)$/: {
+        $packages = ['unzip', 'libwww-perl', 'libdatetime-perl']
+      }
+      default: {
+        fail("Module cloudwatch is not supported on ${::operatingsystem}")
+      }
     }
+
+    ensure_packages($packages)
   }
 
-  # Install dependencies
-  ensure_packages($packages)
-
-  # Download and extract the scripts from AWS
-  archive { "/opt/${zip_name}":
-    ensure       => present,
+  archive { $zip_name:
+    path         => "/tmp/${zip_name}",
     extract      => true,
-    extract_path => '/opt/',
-    source       => "http://aws-cloudwatch.s3.amazonaws.com/downloads/${zip_name}",
-    creates      => $dest_dir,
-    require      => Package[$packages],
+    extract_path => $install_target,
+    source       => $zip_url,
+    creates      => $install_dir,
   }
 
   if $access_key and $secret_key {
-    file { $cred_file:
-      ensure  => file,
-      content => template('cloudwatch/awscreds.conf.erb'),
-      require => Archive["/opt/${zip_name}"],
-      before  => Cron['cloudwatch'],
-    }
-    $creds_path = "--aws-credential-file=${cred_file}"
+    if $credential_file { fail('$access_key and $secret_key cannot be used with $credential_file') }
+    if $iam_role { fail('$access_key and $secret_key cannot be used with $iam_role') }
+    $credentials = "--aws-access-key-id=${access_key} --aws-secret-key=${secret_key}"
+  } else {
+    $credentials = ''
   }
-  else { $creds_path = '' }
 
-  # build command
+  if $credential_file {
+    if $access_key and $secret_key { fail('$credential_file cannot be used with $access_key and $secret_key') }
+    if $iam_role { fail('$credential_file cannot be used with $iam_role') }
+    $creds_path = "--aws-credential-file=${credential_file}"
+  } else {
+    $creds_path = ''
+  }
+
+  if $iam_role {
+    if $access_key and $secret_key { fail('$iam_role cannot be used with $access_key and $secret_key') }
+    if $credential_file { fail('$iam_role cannot be used with $credential_file') }
+    $iam_role_val = "--aws-iam-role=${iam_role}"
+  } else {
+    $iam_role_val = ''
+  }
+
   if $enable_mem_util {
     $mem_util = '--mem-util'
   } else {
@@ -229,31 +221,25 @@ class cloudwatch (
 
   $memory_units_val = "--memory-units=${memory_units}"
 
-  if ! empty($disk_path) {
-    $disk_path_val = rstrip(inline_template('<% @disk_path.each do |path| -%>--disk-path=<%=path%> <%end-%>'))
-    if $disk_space_util {
-      $disk_space_util_val = '--disk-space-util'
-    } else {
-      $disk_space_util_val = ''
-    }
-    if $disk_space_used {
-      $disk_space_used_val = '--disk-space-used'
-    } else {
-      $disk_space_used_val = ''
-    }
-    if $disk_space_avail {
-      $disk_space_avail_val = '--disk-space-avail'
-    } else {
-      $disk_space_avail_val = ''
-    }
-    $disk_space_units_val = "--disk-space-units=${disk_space_units}"
+  $disk_path_val = rstrip(inline_template('<% @disk_path.each do |path| -%>--disk-path=<%=path%> <%end-%>'))
+
+  if $enable_disk_space_util {
+    $disk_space_util_val = '--disk-space-util'
   } else {
-    $disk_path_val        = ''
-    $disk_space_util_val  = ''
-    $disk_space_used_val  = ''
-    $disk_space_avail_val = ''
-    $disk_space_units_val = ''
+    $disk_space_util_val = ''
   }
+  if $enable_disk_space_used {
+    $disk_space_used_val = '--disk-space-used'
+  } else {
+    $disk_space_used_val = ''
+  }
+  if $enable_disk_space_avail {
+    $disk_space_avail_val = '--disk-space-avail'
+  } else {
+    $disk_space_avail_val = ''
+  }
+
+  $disk_space_units_val = "--disk-space-units=${disk_space_units}"
 
   if $aggregated {
     if $aggregated_only {
@@ -275,13 +261,12 @@ class cloudwatch (
     $auto_scaling_val = ''
   }
 
-  $pl_path = "${dest_dir}/mon-put-instance-data.pl"
-  $command = "${pl_path} ${mem_util} ${mem_used} ${mem_avail} ${swap_util}\
-              ${swap_used} ${memory_units_val} ${disk_path_val} ${disk_space_util_val}\
-              ${disk_space_used_val} ${disk_space_avail_val} ${disk_space_units_val}\
-              ${aggregated_val} ${auto_scaling_val} ${creds_path} --from-cron"
+  $cmd = "${install_dir}/mon-put-instance-data.pl'
+          --from-cron ${memory_units_val} ${disk_space_units_val} ${creds_path} ${credentials} ${iam_role_val}
+          ${mem_util} ${mem_used} ${mem_avail} ${swap_util} ${swap_used}
+          ${disk_path_val} ${disk_space_util_val} ${disk_space_used_val} ${disk_space_avail_val}
+          ${aggregated_val} ${auto_scaling_val}"
 
-  # Setup a cron to push the metrics to Cloudwatch every minute
   cron { 'cloudwatch':
     ensure   => present,
     name     => 'Push extra metrics to Cloudwatch',
@@ -290,7 +275,7 @@ class cloudwatch (
     monthday => '*',
     month    => '*',
     weekday  => '*',
-    command  => $command,
-    require  => Archive['/opt/CloudWatchMonitoringScripts-1.2.1.zip'],
+    command  => regsubst($cmd, '\s+', ' ', 'G'),
+    require  => Archive[$zip_name]
   }
 }
