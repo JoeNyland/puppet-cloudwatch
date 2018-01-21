@@ -72,6 +72,8 @@ IAM access key ID for a user that has permissions to push metrics to Cloudwatch.
 
 Note: Both `access_key` _and_ `secret_key` must be set to use IAM user credentials.
 
+Note: Cannot be used with `credential_file` or `iam_role`.
+
 Default: `undef`
 
 #### `secret_key`
@@ -80,11 +82,28 @@ IAM secret access key for a user that has permissions to push metrics to Cloudwa
 
 Note: Both `access_key` _and_ `secret_key` must be set to use IAM user credentials.
 
+Note: Cannot be used with `credential_file` or `iam_role`.
+
+Default: `undef`
+
+#### `credential_file`
+
+Path to file containing IAM user credentials.
+
+Note: Cannot be used with `access_key` _and_ `secret_key` or `iam_role`.
+
+Example credential file:
+
+    AWSAccessKeyId=my-access-key-id
+    AWSSecretKey=my-secret-access-key
+
 Default: `undef`
 
 #### `iam_role`
 
 IAM role used to provide AWS credentials.
+
+Note: Cannot be used with `access_key` _and_ `secret_key` or `credential_file`.
 
 Default: `undef`
 
