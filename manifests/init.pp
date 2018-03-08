@@ -261,7 +261,7 @@ class cloudwatch (
     $auto_scaling_val = ''
   }
 
-  $cmd = "${install_dir}/mon-put-instance-data.pl'
+  $cmd = "${install_dir}/mon-put-instance-data.pl
           --from-cron ${memory_units_val} ${disk_space_units_val} ${creds_path} ${credentials} ${iam_role_val}
           ${mem_util} ${mem_used} ${mem_avail} ${swap_util} ${swap_used}
           ${disk_path_val} ${disk_space_util_val} ${disk_space_used_val} ${disk_space_avail_val}
