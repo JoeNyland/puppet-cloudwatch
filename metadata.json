@@ -18,15 +18,15 @@
     },
     {
       "operatingsystem":"Amazon",
-      "operatingsystemrelease":[ "2015.03" ]
+      "operatingsystemrelease":[ "2016.09", "2017.09" ]
     },
     {
       "operatingsystem":"Ubuntu",
-      "operatingsystemrelease":[ "14.04", "12.04" ]
+      "operatingsystemrelease":[ "14.04", "16.04" ]
     },
     {
       "operatingsystem":"Debian",
-      "operatingsystemrelease":[ "8.1", "7.8" ]
+      "operatingsystemrelease":[ "7", "8", "9" ]
     }
   ],
   "tags": [ "monitoring", "aws", "cloudwatch" ],
