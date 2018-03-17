@@ -140,7 +140,7 @@ class cloudwatch (
   if $manage_dependencies {
     # Establish which packages are needed, depending on the OS family
     case $::operatingsystem {
-      /(RedHat|CentOS|Fedora)$/: {
+      /(RedHat|CentOS)$/: {
         $packages = ['perl-Switch', 'perl-DateTime', 'perl-Sys-Syslog', 'perl-LWP-Protocol-https', 'perl-Digest-SHA', 'unzip', 'cronie']
       }
       'Amazon': {
