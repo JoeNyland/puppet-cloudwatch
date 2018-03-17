@@ -150,7 +150,7 @@ class cloudwatch (
         $packages = ['libwww-perl', 'libdatetime-perl', 'unzip', 'cronie']
       }
       default: {
-        fail("Module cloudwatch is not supported on ${::operatingsystem}")
+        fail("Dependency management for module cloudwatch is not supported on ${::operatingsystem}")
       }
     }
 
