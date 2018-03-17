@@ -235,11 +235,6 @@ Whether or not this module should manage the installation of the packages which 
 
 Default: `true`
 
-## Limitations
-
-* Tested on CentOS 7, Debian 7, Debian 8, Ubuntu 12.04, Ubuntu 14.04 and Amazon Linux 2015.03.
-* Tested with Puppet 4.x and 3.x.
-
 ## Development
 
 Please feel free to file an issue on the GitHub repo or create a PR if there's something here that you'd like to fix.
