@@ -237,11 +237,13 @@ class cloudwatch (
   } else {
     $disk_space_util_val = ''
   }
+
   if $enable_disk_space_used {
     $disk_space_used_val = '--disk-space-used'
   } else {
     $disk_space_used_val = ''
   }
+
   if $enable_disk_space_avail {
     $disk_space_avail_val = '--disk-space-avail'
   } else {
