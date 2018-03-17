@@ -141,13 +141,13 @@ class cloudwatch (
     # Establish which packages are needed, depending on the OS family
     case $::operatingsystem {
       /(RedHat|CentOS|Fedora)$/: {
-        $packages = ['perl-Switch', 'perl-DateTime', 'perl-Sys-Syslog', 'perl-LWP-Protocol-https', 'perl-Digest-SHA', 'unzip']
+        $packages = ['perl-Switch', 'perl-DateTime', 'perl-Sys-Syslog', 'perl-LWP-Protocol-https', 'perl-Digest-SHA', 'unzip', 'cronie']
       }
       'Amazon': {
-        $packages = ['perl-Switch', 'perl-DateTime', 'perl-Sys-Syslog', 'perl-LWP-Protocol-https', 'unzip']
+        $packages = ['perl-Switch', 'perl-DateTime', 'perl-Sys-Syslog', 'perl-LWP-Protocol-https', 'unzip', 'cronie']
       }
       /(Ubuntu|Debian)$/: {
-        $packages = ['libwww-perl', 'libdatetime-perl', 'unzip']
+        $packages = ['libwww-perl', 'libdatetime-perl', 'unzip', 'cronie']
       }
       default: {
         fail("Module cloudwatch is not supported on ${::operatingsystem}")
@@ -276,15 +276,32 @@ class cloudwatch (
           ${disk_path_val} ${disk_space_util_val} ${disk_space_used_val} ${disk_space_avail_val}
           ${aggregated_val} ${auto_scaling_val}"
 
-  cron { 'cloudwatch':
-    ensure   => present,
-    name     => 'Push extra metrics to Cloudwatch',
-    minute   => $cron_min,
-    hour     => '*',
-    monthday => '*',
-    month    => '*',
-    weekday  => '*',
-    command  => regsubst($cmd, '\s+', ' ', 'G'),
-    require  => Archive[$zip_name]
+  if ($manage_dependencies) {
+    cron { 'cloudwatch':
+      ensure   => present,
+      name     => 'Push extra metrics to Cloudwatch',
+      minute   => $cron_min,
+      hour     => '*',
+      monthday => '*',
+      month    => '*',
+      weekday  => '*',
+      command  => regsubst($cmd, '\s+', ' ', 'G'),
+      require  => [
+        Archive[$zip_name],
+        Package[$packages]
+      ]
+    }
+  } else {
+    cron { 'cloudwatch':
+      ensure   => present,
+      name     => 'Push extra metrics to Cloudwatch',
+      minute   => $cron_min,
+      hour     => '*',
+      monthday => '*',
+      month    => '*',
+      weekday  => '*',
+      command  => regsubst($cmd, '\s+', ' ', 'G'),
+      require  => Archive[$zip_name]
+    }
   }
 }
