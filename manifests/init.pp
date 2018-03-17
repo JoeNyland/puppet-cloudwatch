@@ -147,7 +147,7 @@ class cloudwatch (
         $packages = ['perl-Switch', 'perl-DateTime', 'perl-Sys-Syslog', 'perl-LWP-Protocol-https', 'unzip']
       }
       /(Ubuntu|Debian)$/: {
-        $packages = ['unzip', 'libwww-perl', 'libdatetime-perl']
+        $packages = ['libwww-perl', 'libdatetime-perl', 'unzip']
       }
       default: {
         fail("Module cloudwatch is not supported on ${::operatingsystem}")
@@ -155,14 +155,23 @@ class cloudwatch (
     }
 
     ensure_packages($packages)
-  }
 
-  archive { $zip_name:
-    path         => "/tmp/${zip_name}",
-    extract      => true,
-    extract_path => $install_target,
-    source       => $zip_url,
-    creates      => $install_dir,
+    archive { $zip_name:
+      path         => "/tmp/${zip_name}",
+      extract      => true,
+      extract_path => $install_target,
+      source       => $zip_url,
+      creates      => $install_dir,
+      require      => Package[$packages]
+    }
+  } else {
+    archive { $zip_name:
+      path         => "/tmp/${zip_name}",
+      extract      => true,
+      extract_path => $install_target,
+      source       => $zip_url,
+      creates      => $install_dir
+    }
   }
 
   if $access_key and $secret_key {
