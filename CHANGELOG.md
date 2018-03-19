@@ -1,3 +1,7 @@
+## Release [0.5.1](https://github.com/JoeNyland/puppet-cloudwatch/releases/tag/0.5.1)
+
+* No changes in this release
+
 ## Release [0.5.0](https://github.com/JoeNyland/puppet-cloudwatch/releases/tag/0.5.0)
 
 * Remove erroneous quote from cron command
