@@ -1,3 +1,12 @@
+## Release [0.5.0](https://github.com/JoeNyland/puppet-cloudwatch/releases/tag/0.5.0)
+
+* Remove erroneous quote from cron command
+* Ensure that unzip is installed before extracting the archive containing Cloudwatch scripts (only when `$manage_dependencies` is enabled)
+* Ensure that cron is installed before creating the cron entry (only when `$manage_dependencies` is enabled)
+* Update supported OS versions
+* Remove Fedora as a supported OS
+* Revise error message for unsupported OS
+
 ## Release [0.4.0](https://github.com/JoeNyland/puppet-cloudwatch/releases/tag/0.4.0)
 
 * Remove extra spaces from command that's added to crontab
