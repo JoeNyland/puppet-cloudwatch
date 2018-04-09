@@ -134,7 +134,7 @@ class cloudwatch (
 ) {
 
   $install_dir = "${install_target}/aws-scripts-mon"
-  $zip_name    = 'CloudWatchMonitoringScripts-1.2.1.zip'
+  $zip_name    = 'CloudWatchMonitoringScripts-1.2.2.zip'
   $zip_url     = "http://aws-cloudwatch.s3.amazonaws.com/downloads/${zip_name}"
 
   if $manage_dependencies {
