@@ -147,7 +147,7 @@ class cloudwatch (
         $packages = ['perl-Switch', 'perl-DateTime', 'perl-Sys-Syslog', 'perl-LWP-Protocol-https', 'unzip', 'cronie']
       }
       /(Ubuntu|Debian)$/: {
-        $packages = ['libwww-perl', 'libdatetime-perl', 'unzip', 'cronie']
+        $packages = ['libwww-perl', 'libdatetime-perl', 'unzip', 'cron']
       }
       default: {
         fail("Dependency management for module cloudwatch is not supported on ${::operatingsystem}")
