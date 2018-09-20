@@ -130,12 +130,12 @@ class cloudwatch (
   $auto_scaling_only       = false,
   $cron_min                = '*',
   $install_target          = '/opt',
-  $manage_dependencies     = true
+  $manage_dependencies     = true,
+  $zip_url                 = "http://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-1.2.2.zip",
 ) {
 
   $install_dir = "${install_target}/aws-scripts-mon"
-  $zip_name    = 'CloudWatchMonitoringScripts-1.2.2.zip'
-  $zip_url     = "http://aws-cloudwatch.s3.amazonaws.com/downloads/${zip_name}"
+  $zip_name    = basename($zip_url)
 
   if $manage_dependencies {
     # Establish which packages are needed, depending on the OS family
