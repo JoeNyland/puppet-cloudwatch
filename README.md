@@ -235,6 +235,12 @@ Whether or not this module should manage the installation of the packages which 
 
 Default: `true`
 
+#### `zip_url`
+
+URL to the Cloudwatch scripts zip file.
+
+Default: `http://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-1.2.2.zip`
+
 ## Development
 
 Please feel free to file an issue on the GitHub repo or create a PR if there's something here that you'd like to fix.
