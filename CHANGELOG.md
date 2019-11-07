@@ -1,3 +1,6 @@
+## Unreleased
+* Add extra_args parameter for passing extra arguments to `mon-put-instance-data.pl`
+
 ## Release [0.5.2](https://github.com/JoeNyland/puppet-cloudwatch/releases/tag/0.5.2)
 
 * Use cron instead of cronie on Debian/Ubuntu OSes
