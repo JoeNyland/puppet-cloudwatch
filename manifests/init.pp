@@ -132,6 +132,7 @@ class cloudwatch (
   $aggregated_only         = false,
   $auto_scaling            = false,
   $auto_scaling_only       = false,
+  $extra_args              = '',
   $cron_min                = '*',
   $install_target          = '/opt',
   $manage_dependencies     = true,
@@ -280,7 +281,7 @@ class cloudwatch (
           --from-cron ${memory_units_val} ${disk_space_units_val} ${creds_path} ${credentials} ${iam_role_val}
           ${mem_util} ${mem_used} ${mem_avail} ${swap_util} ${swap_used}
           ${disk_path_val} ${disk_space_util_val} ${disk_space_used_val} ${disk_space_avail_val}
-          ${aggregated_val} ${auto_scaling_val}"
+          ${aggregated_val} ${auto_scaling_val} ${extra_args}"
 
   if ($manage_dependencies) {
     cron { 'cloudwatch':

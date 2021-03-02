@@ -216,6 +216,12 @@ The script reports only Auto Scaling metrics.
 
 Default: `false`
 
+#### `extra_args`
+
+Add extra arguments string to the execution of `mon-put-instance-data.pl`.
+
+Default: empty string
+
 #### `cron_min`
 
 The minute at which to run the cron job, specified an cron format. e.g. `'*/5'` would push metrics to Cloudwatch
